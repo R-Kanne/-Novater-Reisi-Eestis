@@ -11,7 +11,7 @@ class PriceSheet(db.Model):
     timestamp_fetched = db.Column(db.DateTime, default=datetime.now(timezone.utc)) # When we fetched it
     data = db.Column(db.Text, nullable=False) # Store the whole JSON 'routes' part as text
 
-    # Relationship to Booking (one PriceList can have many Bookings)
+    # Relationship to Booking (one PriceSheet can have many Bookings)
     bookings = db.relationship('Booking', backref='price_list', lazy=True)
 
 class Booking(db.Model):
@@ -27,5 +27,5 @@ class Booking(db.Model):
     company_name = db.Column(db.String(100), nullable=False)
     booking_time = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
-    # Foreign key relationship to PriceList
+    # Foreign key relationship to PriceSheet
     price_sheet_id = db.Column(db.String, db.ForeignKey('price_sheets.id'), nullable=False)
