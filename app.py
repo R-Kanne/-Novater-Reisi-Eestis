@@ -68,7 +68,7 @@ def index():
         return render_template("index.html")
     return render_template('index.html')
 
-@app.route('/book', methods=['POST'])
+@app.route('/bookings', methods=['GET''POST'])
 def book_route():
     return render_template('bookings.html')
     
