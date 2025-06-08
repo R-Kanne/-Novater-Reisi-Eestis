@@ -36,7 +36,27 @@ def manage_price_lists(new_price_list_data):
             #  Commiting new price_sheet to db
             db.session.add(new_price_sheet)
             db.session.commit()
-            # ... (rest of manage_price_lists) ...
+            
+            # Querying all price sheets, ordered by their fetch timestamp (oldest first)
+            all_price_sheets = PriceSheet.query.order_by(PriceSheet.timestamp_fetched.asc()).all()
+
+            if len(all_price_sheets) > 15:
+                sheets_to_delete = all_price_sheets[:-15] # This slices the list to get everything but the last 15 price_sheets
+
+                # 4. Delete the identified old price_sheets
+                for sheet in sheets_to_delete:
+                    db.session.delete(sheet)
+                
+                # 5. Commiting to database
+                db.session.commit()
+                print(f"Deleted {len(sheets_to_delete)} old price sheets to maintain limit of 15.")
+
+            print(f"Price list {new_price_list_data['id']} saved successfully.")
+            return True # Indicate that a new price sheet was added
+
+        print(f"Price list {new_price_list_data['id']} already exists. Skipping save.")
+        return False # Indicate that no new price sheet was added
+
 
 # Creating the actual database tables
 with app.app_context():
@@ -44,25 +64,4 @@ with app.app_context():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        if not PriceSheet.query.first(): 
-            print("Database empty. Attempting initial API fetch...")
-            initial_data = fetch_current_schedule()
-            if initial_data:
-                # Naive datetime object
-                expires_naive = initial_data['expires'].get('date_obj')
-
-                if expires_naive:
-                    # Making expires_naive timezone-aware by replacing tzinfo with timezone.utc
-                    expires_aware = expires_naive.replace(tzinfo=timezone.utc)
-
-                    # Now comparing timezone aware date time objects
-                    if datetime.now(timezone.utc) < expires_aware:
-                        manage_price_lists(initial_data)
-                        print("Initial schedule fetched and saved.")
-                    else:
-                        print("Initial schedule fetched but it's already expired or invalid.")
-                else:
-                    print(f"Warning: Initial price list has no valid expiry date. Not saving.")
-            else:
-                print("Failed to fetch initial schedule from API.")
+    app.run(debug=True)
