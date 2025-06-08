@@ -62,6 +62,17 @@ def manage_price_lists(new_price_list_data):
 with app.app_context():
     db.create_all() # This creates the tables if they don't exist
 
+@app.route('/', methods=['GET','POST'])
+def index():
+    if request.method == 'POST':
+        return render_template("index.html")
+    return render_template('index.html')
+
+@app.route('/book', methods=['POST'])
+def book_route():
+    return render_template('bookings.html')
+    
+
 
 if __name__ == '__main__':
     app.run(debug=True)
