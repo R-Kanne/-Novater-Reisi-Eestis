@@ -1,42 +1,43 @@
-/* Basic Styling for the Navbar */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .navbar {
-            display: flex; /* Use flexbox for alignment */
-            justify-content: space-between; /* Space out items */
-            align-items: center; /* Vertically align items */
-            background-color: #333;
-            padding: 10px 20px;
-            color: white;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-        .navbar a:hover {
-            background-color: #575757;
-        }
-        .navbar-brand {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        .navbar-center {
-            /* For a logo or central element */
-            flex-grow: 1; /* Allows it to take up available space */
-            text-align: center; /* Centers content within its flexible space */
-        }
-        .navbar-right {
-            /* Aligns items to the right */
-            margin-left: auto;
-        }
 
-        /* Basic styling for main content area */
-        main {
-            padding: 20px;
-        }
+body 
+{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+.navbar 
+{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+}
+.navbar a 
+{
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+.navbar a:hover 
+{
+    background-color: #575757;
+}
+.navbar-brand 
+{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.navbar-right 
+{
+    margin-left: auto;
+}
+
+
+main 
+{
+    padding: 20px;
+}

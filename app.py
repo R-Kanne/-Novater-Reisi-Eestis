@@ -57,6 +57,21 @@ def manage_price_lists(new_price_list_data):
         print(f"Price list {new_price_list_data['id']} already exists. Skipping save.")
         return False # Indicate that no new price sheet was added
 
+def get_unique_departure_and_arrival_cities(routes_data):
+    """Takes as input a price_sheet and returns two lists of unique valid arrival and departure cities as per api"""
+    departure_cities = set()
+    arrival_cities = set()
+
+    for route in routes_data:
+        departure_cities.add(route['from']['name'])
+        arrival_cities.add(route['to']['name'])
+    
+    # Convert sets to sorted lists
+    sorted_departure_cities = sorted(list(departure_cities))
+    sorted_arrival_cities = sorted(list(arrival_cities))
+    
+    return sorted_departure_cities, sorted_arrival_cities # Return as a tuple
+
 
 # Creating the actual database tables
 with app.app_context():
