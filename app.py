@@ -72,6 +72,54 @@ def get_unique_departure_and_arrival_cities(routes_data):
     
     return sorted_departure_cities, sorted_arrival_cities # Return as a tuple
 
+def get_current_routes_data():
+    """
+    Fetches the latest valid price sheet routes data.
+    Prioritizes fetching from the database cache if a non-expired sheet exists,
+    otherwise fetches from the external API and saves it to the database.
+
+    Returns:
+        list: A list of route dictionaries, or an empty list if data cannot be fetched.
+    """
+    with app.app_context(): 
+
+        valid_price_sheet_db = PriceSheet.query.filter(
+            PriceSheet.expires > datetime.now(timezone.utc)
+        ).order_by(PriceSheet.timestamp_fetched.desc()).first()
+
+        if valid_price_sheet_db:
+            print(f"Using cached price list: {valid_price_sheet_db.id} (expires: {valid_price_sheet_db.expires.isoformat()})")
+            return json.loads(valid_price_sheet_db.data)
+        else:
+            print("No valid price list in DB or all expired. Fetching from API...")
+            api_data = fetch_current_schedule() # Calling api_client function
+
+            if api_data:
+                # Ensuring api_data has the 'date_obj' key for the actual datetime object
+                expires_naive = api_data['expires'].get('date_obj')
+
+                if expires_naive:
+                    # Making the expiry datetime timezone-aware
+                    expires_aware = expires_naive.replace(tzinfo=timezone.utc)
+
+                    # Checking if the newly fetched data is already expired
+                    if datetime.now(timezone.utc) < expires_aware:
+                        # Saving the new data to the database
+                        manage_price_lists(api_data)
+                        # Return just the 'routes' part of the API response
+                        return api_data.get('routes', [])
+                    else:
+                        flash("Fetched price list is already expired. Cannot display current data.", "warning")
+                        print("API fetch: Fetched price list is already expired. Not saving.")
+                        return [] # Returning empty if new data is already expired
+                else:
+                    flash("API response missing expiry date for new data.", "error")
+                    print("API fetch: Response missing expiry date for new data.")
+                    return []
+            else:
+                flash("Failed to fetch current schedule from API.", "error")
+                print("API fetch: Failed to fetch current schedule.")
+                return [] # Returning empty if API fetch failed
 
 # Creating the actual database tables
 with app.app_context():
@@ -79,6 +127,7 @@ with app.app_context():
 
 @app.route('/', methods=['GET','POST'])
 def index():
+    all_routes = get_current_routes_data()
     if request.method == 'POST':
         return render_template("index.html")
     return render_template('index.html')
