@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
-import json # For storing JSON as text
 
 db = SQLAlchemy() # Initializing the SQLAlchemy extension
 
@@ -8,7 +7,7 @@ class PriceSheet(db.Model):
     __tablename__ = 'price_sheets' # Explicit table name
     id = db.Column(db.String, primary_key=True) # The ID from the API response
     expires = db.Column(db.DateTime, nullable=False)
-    timestamp_fetched = db.Column(db.DateTime, default=datetime.now(timezone.utc)) # When we fetched it
+    timestamp_fetched = db.Column(db.DateTime, default=datetime.now(timezone.utc)) # When data was fetched
     data = db.Column(db.Text, nullable=False) # Store the whole JSON 'routes' part as text
 
     # Relationship to Booking (one PriceSheet can have many Bookings)

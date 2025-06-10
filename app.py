@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dotenv import load_dotenv
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import json
-
 from api_client import fetch_current_schedule
 from models import db, PriceSheet, Booking # Importing models
 
@@ -127,6 +126,7 @@ with app.app_context():
 
 @app.route('/', methods=['GET','POST'])
 def index():
+    """Main page"""
     all_routes = get_current_routes_data() # Getting current routes data
 
     departure_cities, arrival_cities = get_unique_departure_and_arrival_cities(all_routes) # getting valid cities
@@ -139,8 +139,9 @@ def index():
         arrival_cities=arrival_cities
     )
 
-@app.route('/bookings', methods=['GET''POST'])
+@app.route('/bookings', methods=['GET','POST'])
 def book_route():
+    """Route that displays booking information"""
     return render_template('bookings.html')
     
 

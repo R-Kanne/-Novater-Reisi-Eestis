@@ -12,6 +12,8 @@ NOVATER_USERNAME = os.getenv('USERNAME')
 NOVATER_PASSWORD = os.getenv('PASSWORD')
 
 def fetch_current_schedule():
+    """This function fetches data from the api, inserts a datetime object into the data and returns that data in json format.
+    In case of error fetching data function returns None"""
     try:
         response = requests.get(
             NOVATER_API_URL,
