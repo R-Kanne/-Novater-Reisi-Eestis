@@ -1,7 +1,91 @@
 {% extends "layout.html" %}
 
-{% block title %}Reisi Eestis{% endblock %}
+{% block title %}Bus Schedule Search{% endblock %}
 
 {% block content %}
-    
+    <h1>Reiside otsing</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('index') }}" method="GET">
+        <label for="from_city">Asukoht:</label>
+        <select name="from_city" id="from_city">
+            <option value="">-- Vali linn --</option>
+            {% for city in departure_cities %}
+                <option value="{{ city }}" {% if request.args.get('from_city') == city %}selected{% endif %}>
+                    {{ city }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="to_city">Sihtkoht:</label>
+        <select name="to_city" id="to_city">
+            <option value="">-- Vali linn --</option>
+            {% for city in arrival_cities %}
+                <option value="{{ city }}" {% if request.args.get('to_city') == city %}selected{% endif %}>
+                    {{ city }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Otsi (Ei tööta)</button>
+    </form>
+
+    <h2>Kõik võimalikud reisid:</h2>
+    {% if routes %}
+        {% for route in routes %}
+            <div class="route-item">
+                <p>
+                    {# Accessing 'from' and 'to' data with default values #}
+                    <strong>{{ route.get('from', {}).get('name', 'Unknown From') }}</strong> - 
+                    <strong>{{ route.get('to', {}).get('name', 'Unknown To') }}</strong> 
+                    
+                    {# Display distance if available #}
+                    {% if route.get('distance') is not none %}
+                        | Distants: {{ route.get('distance') }} km
+                    {% endif %}
+                </p>
+                <ul>
+                    {# Iterate through trips and accessing data with default values #}
+                    {% for schedule in route.get('schedule', []) %} 
+                        <li>
+                            {# Access company name from schedule.company.state #}
+                            Firma: <strong>{{ schedule.get('company', {}).get('state', 'N/A') }}</strong> | 
+                            
+                            {# Directly display the full date string for now #}
+                            Väljasõit: {{ schedule.get('start', {}).get('date', 'N/A') }} | 
+                            Kohal: {{ schedule.get('end', {}).get('date', 'N/A') }} | 
+                            
+                            Hind: €{{ schedule.get('price', 0) | round(2) }}
+                            
+                            <form action="{{ url_for('book_route') }}" method="POST" style="display:inline; margin-left: 10px;">
+                                <input type="hidden" name="route_id" value="{{ route.id | default('') }}">
+                                <input type="hidden" name="schedule_id" value="{{ schedule.id | default('') }}">
+                                <input type="hidden" name="from_city" value="{{ route.get('from', {}).get('name', '') }}">
+                                <input type="hidden" name="to_city" value="{{ route.get('to', {}).get('name', '') }}">
+                                <input type="hidden" name="company_name" value="{{ schedule.get('company', {}).get('state', '') }}">
+                                <input type="hidden" name="price" value="{{ schedule.get('price', 0) }}">
+                                
+                                <input type="hidden" name="first_name" value="Test"> 
+                                <input type="hidden" name="last_name" value="User"> 
+
+                                <button type="submit">Broneeri</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No routes found or available.</p>
+    {% endif %}
+
 {% endblock %}

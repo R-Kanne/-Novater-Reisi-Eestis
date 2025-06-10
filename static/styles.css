@@ -1,10 +1,14 @@
-
 body 
 {
     font-family: Arial, sans-serif;
     margin: 0;
-    background-color: #f4f4f4;
+    background-color: whitesmoke;
 }
+
+h1:first-of-type {
+    text-align: center;
+}
+
 .navbar 
 {
     display: flex; 
@@ -14,6 +18,7 @@ body
     padding: 10px 20px;
     color: white;
 }
+
 .navbar a 
 {
     color: white;
@@ -22,10 +27,12 @@ body
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
+
 .navbar a:hover 
 {
     background-color: #575757;
 }
+
 .navbar-brand 
 {
     font-size: 1.5em;
@@ -40,4 +47,23 @@ body
 main 
 {
     padding: 20px;
+}
+
+.route-item
+{
+    background-color:beige;
+    border: 1px solid gray;
+    padding: 10px;
+    margin-bottom: 10px;
+
+}
+
+.route-item > p
+{
+    font-size: large;
+}
+
+.route-item > ul > li
+{
+  margin-bottom: 10px;  
 }

@@ -127,10 +127,17 @@ with app.app_context():
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    all_routes = get_current_routes_data()
-    if request.method == 'POST':
-        return render_template("index.html")
-    return render_template('index.html')
+    all_routes = get_current_routes_data() # Getting current routes data
+
+    departure_cities, arrival_cities = get_unique_departure_and_arrival_cities(all_routes) # getting valid cities
+
+    return render_template( 
+        'index.html',
+        routes=all_routes, # Pass all routes to display
+        request=request, # Keep for future form handling
+        departure_cities=departure_cities,
+        arrival_cities=arrival_cities
+    )
 
 @app.route('/bookings', methods=['GET''POST'])
 def book_route():
