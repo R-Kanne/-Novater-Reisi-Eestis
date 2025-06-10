@@ -81,16 +81,16 @@ pip install -r requirements.txt
 5. **Keskkonnamuutujate Konfigureerimine**
 Rakendus vajab toimimiseks konfidentsiaalsete andmete (nt API URL, API kasutajanimi, API parool, Flaski salajane võti) jaoks keskkonnamuutujaid.
 
-Loo projekti põhikausta uus fail nimega .env.
+Loo projekti põhikausta uus fail nimega .env.  
 Näiteks:
 ```
 touch .env
 ```
 Kopeeri järgmised read faili .env ja asenda sulgudes olevad väärtused oma tegelike andmetega. Eelkõige veendu, et API_USERNAME ja API_PASSWORD vastavad sinu Novateri API autentimisandmetele.
 
-FLASK_SECRET_KEY=sinu_unikaalne_ja_salajane_voti_siia  
-API_USERNAME=sinu_novater_kasutajanimi  
-API_PASSWORD=sinu_novater_parool  
+FLASK_SECRET_KEY=(sinu_unikaalne_ja_salajane_voti_siia)  
+API_USERNAME=(sinu_novater_kasutajanimi)  
+API_PASSWORD=(sinu_novater_parool)  
 API_URL=https://assignments.novater.com/v1/bus/schedule
 
 6. **Rakenduse Käivitamine**
