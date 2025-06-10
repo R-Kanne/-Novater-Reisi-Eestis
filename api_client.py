@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 NOVATER_API_URL = os.getenv('API_URL')
-NOVATER_USERNAME = os.getenv('USERNAME')
-NOVATER_PASSWORD = os.getenv('PASSWORD')
+NOVATER_USERNAME = os.getenv('API_USERNAME')
+NOVATER_PASSWORD = os.getenv('API_PASSWORD')
 
 def fetch_current_schedule():
     """This function fetches data from the api, inserts a datetime object into the data and returns that data in json format.
